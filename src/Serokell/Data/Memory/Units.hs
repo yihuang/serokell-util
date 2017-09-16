@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable  #-}
 {-# LANGUAGE DeriveGeneric       #-}
 {-# LANGUAGE FlexibleInstances   #-}
 {-# LANGUAGE Rank2Types          #-}
@@ -29,6 +30,7 @@ module Serokell.Data.Memory.Units
        ) where
 
 import           Control.DeepSeq        (NFData)
+import           Data.Data              (Data)
 import           Data.Proxy             (Proxy (Proxy))
 import           Data.Text.Lazy.Builder (Builder)
 import           Data.Typeable          (Typeable)
@@ -92,7 +94,7 @@ pow10 = (10 ^)
 
 newtype Byte =
     Byte Integer
-    deriving (Show,Eq,Num,Typeable,Integral,Real,Enum,Ord,Generic,Arbitrary)
+    deriving (Show,Eq,Num,Typeable,Integral,Real,Enum,Ord,Generic,Arbitrary, Data)
 
 instance NFData Byte
 instance MemoryUnit Byte where
