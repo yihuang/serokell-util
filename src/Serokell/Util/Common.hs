@@ -13,7 +13,7 @@ module Serokell.Util.Common
 import Universum
 
 import Data.List (genericIndex)
-import GHC.Exts (build)
+import qualified GHC.Exts as Exts (build)
 
 -- | Enumerate function is analogous to python's enumerate. It
 -- takes sequences of values and returns sequence of pairs where the
@@ -100,7 +100,7 @@ allDistinct xs = and $ zipWith (/=) sorted (drop 1 sorted)
 -- >>> chunksOf 3 []
 -- []
 chunksOf :: Int -> [e] -> [[e]]
-chunksOf i ls = map (take i) (build (splitter ls))
+chunksOf i ls = map (take i) (Exts.build (splitter ls))
   where
     splitter :: [e] -> ([e] -> a -> a) -> a -> a
     splitter [] _ n = n

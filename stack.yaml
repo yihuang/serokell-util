@@ -1,8 +1,20 @@
-resolver: lts-10.6
+#resolver: nightly-2018-04-21
+resolver: lts-11.6
+
+packages:
+- .
+- ../universum
+- ../o-clock
 
 nix:
     packages: [openssh,git]
 
+allow-newer: true
+
 extra-deps:
-- o-clock-0.1.1
-- universum-1.1.0
+#- o-clock-0.1.1
+- fmt-0.6
+- formatting-6.3.4
+#- universum-1.1.1
+#- formatting-6.2.5
+- tasty-hedgehog-0.1.0.2
