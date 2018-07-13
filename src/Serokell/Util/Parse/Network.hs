@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeFamilies     #-}
 
 -- | Parsing network data
 
@@ -19,8 +20,8 @@ module Serokell.Util.Parse.Network
 import Universum hiding (fail, try)
 
 import Control.Monad (fail)
-import Text.Parsec (choice, count, oneOf, option, try, (<?>))
-import Text.Parsec.Char (alphaNum, char, hexDigit, string)
+import Text.Megaparsec (choice, count, option, try, (<?>))
+import Text.Megaparsec.Char (alphaNumChar, char, hexDigitChar, string, oneOf)
 
 import Serokell.Util.Parse.Common (CharParser, asciiAlphaNum, byte, countMinMax, limitedInt)
 
@@ -52,7 +53,7 @@ ipv6address = do
                         ++ [last2 False]
     choice ipv6variants <?> "bad IPv6 address"
   where
-    hexShortNum = countMinMax 1 4 hexDigit
+    hexShortNum = countMinMax 1 4 hexDigitChar
     h4s = (++) <$> hexShortNum <*> string ":"
     sh4 = (++) <$> string ":" <*> hexShortNum
     execNum 0 = return ""
@@ -92,7 +93,7 @@ ipv6addressWithScope = concatSequence [ipv6address, option "" scope]
     scope = concatSequence [string "%", some asciiAlphaNum]
 
 hostname :: CharParser String
-hostname = some $ alphaNum <|> oneOf ".-_"
+hostname = some $ alphaNumChar <|> oneOf (".-_" :: [Char])
 
 host :: CharParser String
 host = hostAddress <$> host'

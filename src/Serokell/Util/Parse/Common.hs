@@ -2,6 +2,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE TypeApplications      #-}
+{-# LANGUAGE TypeFamilies          #-}
 
 -- | Parsing common helpers
 
@@ -18,10 +19,10 @@ import Universum hiding (fail)
 
 import Control.Monad (fail)
 import Prelude (read)
-import Text.Parsec (ParsecT, Stream, option, satisfy)
-import Text.Parsec.Char (digit)
+import Text.Megaparsec (ParsecT, Stream, option, Token, Tokens)
+import Text.Megaparsec.Char (satisfy, digitChar)
 
-type CharParser a = forall s u m. Stream s m Char => ParsecT s u m a
+type CharParser a = forall e s m. (Ord e, Stream s, Token s ~ Char, Tokens s ~ [Char]) => ParsecT e s m a
 
 isAsciiAlpha :: Char -> Bool
 isAsciiAlpha c = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
@@ -35,7 +36,7 @@ isAsciiAlphaNum c = isAsciiAlpha c || isAsciiNum c
 asciiAlphaNum :: CharParser Char
 asciiAlphaNum = satisfy isAsciiAlphaNum
 
-countMinMax :: (Stream s m t) => Int -> Int -> ParsecT s u m a -> ParsecT s u m [a]
+countMinMax :: (Ord e, Stream s) => Int -> Int -> ParsecT e s m a -> ParsecT e s m [a]
 countMinMax m x p
     | m > 0 = do
         f <- p
@@ -49,7 +50,7 @@ countMinMax m x p
 
 limitedInt :: Int -> String -> CharParser Int
 limitedInt x e = do
-    b <- read <$> countMinMax 1 (intDigits x) digit
+    b <- read <$> countMinMax 1 (intDigits x) digitChar
     if b > x
         then fail e
         else return b
@@ -60,7 +61,7 @@ byte :: CharParser Word
 byte = fromIntegral <$> limitedInt 255 "Value to large"
 
 parseIntegralSafe :: Integral a => CharParser a
-parseIntegralSafe = fromIntegerSafe . read =<< some digit
+parseIntegralSafe = fromIntegerSafe . read =<< some digitChar
   where
     fromIntegerSafe :: Integral a => Integer -> CharParser a
     fromIntegerSafe x =

@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeFamilies     #-}
 
 -- | Parsing Base64
 
@@ -10,7 +11,7 @@ module Serokell.Util.Parse.Base64
 import Universum hiding (fail)
 
 import Control.Monad (fail)
-import Text.Parsec.Char (char)
+import Text.Megaparsec.Char (char)
 
 import Serokell.Util.Base64 (decode, decodeUrl)
 import Serokell.Util.Parse.Common (CharParser, asciiAlphaNum)

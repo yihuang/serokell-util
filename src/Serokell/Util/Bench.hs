@@ -19,7 +19,7 @@ import Universum
 
 import Fmt (Buildable (build), (+||), (||+))
 import System.Clock (Clock (..), TimeSpec, diffTimeSpec, getTime, toNanoSecs)
-import Time (KnownRat, KnownDivRat, Time, Nanosecond, ns, toUnit)
+import Time (KnownDivRat, Time, Nanosecond, ns, toUnit)
 
 -- | Get current wall-clock time as any time unit.
 getWallTime :: forall unit m . (MonadIO m, KnownDivRat Nanosecond unit) => m (Time unit)
