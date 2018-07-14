@@ -95,7 +95,7 @@ ipv6addressWithScope = concatSequence [ipv6address, option "" scope]
 hostname :: CharParser String
 hostname = some $ alphaNumChar <|> oneOf (".-_" :: [Char])
 
-host :: CharParser String
+host :: CharParser Text
 host = hostAddress <$> host'
 
 host' :: CharParser Host
