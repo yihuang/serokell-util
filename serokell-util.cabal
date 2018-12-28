@@ -63,7 +63,7 @@ library
                      , microlens
                      , microlens-mtl
                      , mtl
-                     , o-clock ^>= 0.1.1
+                     , o-clock >= 0.1.1 && < 1.1
                      , parsec
                      , process
                      , QuickCheck >= 2.8.1
